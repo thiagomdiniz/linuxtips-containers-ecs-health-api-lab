@@ -52,7 +52,8 @@ module "calories" {
   environment_variables = [
     {
       name  = "ZIPKIN_COLLECTOR_ENDPOINT"
-      value = "http://jaeger-collector.linuxtips-ecs-cluster.internal.com:80"
+      # value = "http://jaeger-collector.linuxtips-ecs-cluster.internal.com:80"
+      value = "http://nutrition-jaeger-collector.linuxtips-ecs-cluster.local:9411"
     }
   ]
 
