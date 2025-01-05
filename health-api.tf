@@ -1,6 +1,5 @@
 module "health_api" {
-  source = "github.com/thiagomdiniz/linuxtips-containers-ecs-service-module?ref=v1.3.1"
-  # source       = "/home/thiago/Documents/GitProjects/arq-containers-aws/linuxtips-containers-ecs-service-module"
+  source       = var.ecs_module_source
   region       = var.region
   cluster_name = var.cluster_name
 
@@ -14,6 +13,12 @@ module "health_api" {
   service_task_count = 1
 
   container_image = "fidelissauro/health-api:latest"
+
+  // Service Connect
+  use_service_connect  = true
+  service_protocol     = "http"
+  service_connect_name = data.aws_ssm_parameter.service_connect_name.value
+  service_connect_arn  = data.aws_ssm_parameter.service_connect_arn.value
 
   service_listener = data.aws_ssm_parameter.listener.value
   alb_arn          = data.aws_ssm_parameter.alb.value
@@ -50,15 +55,15 @@ module "health_api" {
     },
     {
       name  = "BMR_SERVICE_ENDPOINT",
-      value = "nutrition-bmr.linuxtips-ecs-cluster.discovery.com:30000"
+      value = "nutrition-bmr.linuxtips-ecs-cluster.local:30000"
     },
     {
       name  = "IMC_SERVICE_ENDPOINT",
-      value = "nutrition-imc.linuxtips-ecs-cluster.discovery.com:30000"
+      value = "nutrition-imc.linuxtips-ecs-cluster.local:30000"
     },
     {
       name  = "RECOMMENDATIONS_SERVICE_ENDPOINT",
-      value = "nutrition-recommendations.linuxtips-ecs-cluster.discovery.com:30000"
+      value = "nutrition-recommendations.linuxtips-ecs-cluster.local:30000"
     }
   ]
 

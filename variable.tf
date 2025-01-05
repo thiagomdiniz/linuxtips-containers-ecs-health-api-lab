@@ -6,6 +6,11 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "ecs_module_source" {
+  default = "github.com/thiagomdiniz/linuxtips-containers-ecs-service-module?ref=v1.4"
+  # default = "/home/thiago/Documents/GitProjects/arq-containers-aws/linuxtips-containers-ecs-service-module"
+}
+
 variable "ssm_alb" {
   default = "/linuxtips/ecs/lb/id"
 }
@@ -40,4 +45,12 @@ variable "ssm_private_subnet_3" {
 
 variable "ssm_service_discovery_namespace" {
   default = "/linuxtips/ecs/cloudmap/namespace"
+}
+
+variable "ssm_service_connect_arn" {
+  default = "/linuxtips/ecs/service-connect/namespace"
+}
+
+variable "ssm_service_connect_name" {
+  default = "/linuxtips/ecs/service-connect/name"
 }
