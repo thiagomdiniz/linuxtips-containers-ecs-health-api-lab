@@ -15,13 +15,15 @@ module "health_api" {
   container_image = "fidelissauro/health-api:latest"
 
   // Service Connect
-  use_service_connect  = true
+  use_service_connect  = false
   service_protocol     = "http"
   service_connect_name = data.aws_ssm_parameter.service_connect_name.value
   service_connect_arn  = data.aws_ssm_parameter.service_connect_arn.value
 
-  service_listener = data.aws_ssm_parameter.listener_internal.value
-  alb_arn          = data.aws_ssm_parameter.alb_internal.value
+  # service_listener = data.aws_ssm_parameter.listener_internal.value
+  # alb_arn          = data.aws_ssm_parameter.alb_internal.value
+  service_listener = data.aws_ssm_parameter.listener.value
+  alb_arn          = data.aws_ssm_parameter.alb.value
 
   service_task_execution_role = aws_iam_role.main.arn
 
@@ -42,9 +44,12 @@ module "health_api" {
     }
   ]
 
+  deployment_controller = "CODE_DEPLOY"
+  # codedeploy_strategy   = "CodeDeployDefault.ECSLinear10PercentEvery1Minutes"
+
   service_hosts = [
-    # "health.linuxtips.demo"
-    "health.linuxtips-ecs-cluster.internal.com"
+    "health.linuxtips.demo"
+    # "health.linuxtips-ecs-cluster.internal.com"
   ]
 
   service_discovery_namespace = data.aws_ssm_parameter.service_discovery_namespace.value
@@ -52,21 +57,28 @@ module "health_api" {
   environment_variables = [
     {
       name  = "ZIPKIN_COLLECTOR_ENDPOINT"
-      # value = "http://jaeger-collector.linuxtips-ecs-cluster.internal.com:80"
-      value = "http://nutrition-jaeger-collector.linuxtips-ecs-cluster.local:9411"
+      value = "http://jaeger-collector.linuxtips-ecs-cluster.internal.com:80"
+      # value = "http://nutrition-jaeger-collector.linuxtips-ecs-cluster.local:9411"
     },
     {
-      name  = "BMR_SERVICE_ENDPOINT",
-      value = "nutrition-bmr.linuxtips-ecs-cluster.local:30000"
+      name = "BMR_SERVICE_ENDPOINT",
+      # value = "nutrition-bmr.linuxtips-ecs-cluster.local:30000"
+      value = "nutrition-bmr.linuxtips-ecs-cluster.discovery.com:30000"
     },
     {
-      name  = "IMC_SERVICE_ENDPOINT",
-      value = "nutrition-imc.linuxtips-ecs-cluster.local:30000"
+      name = "IMC_SERVICE_ENDPOINT",
+      # value = "nutrition-imc.linuxtips-ecs-cluster.local:30000"
+      value = "nutrition-imc.linuxtips-ecs-cluster.discovery.com:30000"
     },
     {
-      name  = "RECOMMENDATIONS_SERVICE_ENDPOINT",
-      value = "nutrition-recommendations.linuxtips-ecs-cluster.local:30000"
-    }
+      name = "RECOMMENDATIONS_SERVICE_ENDPOINT",
+      # value = "nutrition-recommendations.linuxtips-ecs-cluster.local:30000"
+      value = "nutrition-recommendations.linuxtips-ecs-cluster.discovery.com:30000"
+    },
+    {
+      name  = "version",
+      value = timestamp()
+    },
   ]
 
   vpc_id = data.aws_ssm_parameter.vpc.value

@@ -7,7 +7,7 @@ variable "region" {
 }
 
 variable "ecs_module_source" {
-  default = "github.com/thiagomdiniz/linuxtips-containers-ecs-service-module?ref=v1.4"
+  default = "github.com/thiagomdiniz/linuxtips-containers-ecs-service-module?ref=v1.4.1"
   # default = "/home/thiago/Documents/GitProjects/arq-containers-aws/linuxtips-containers-ecs-service-module"
 }
 
